@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Georgy's Workout App</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="container">
+        <a class="logo" href="/dashboard">GG<span>workout</span></a>
+
+        <img id="mobile-cta" class="mobile-menu" src="images/menu.svg" />
+
+        <nav>
+          <img
+            id="mobile-exit"
+            class="mobile-menu-exit"
+            src="images/exit.svg"
+          />
+          <ul class="primary-nav">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/log-a-workout">Log a Workout</a></li>
+            <li><a href="/history">History</a></li>
+            <li><a href="/create-template">Add a Template</a></li>
+          </ul>
+
+          <ul class="secondary-nav">
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <h1>Hello this is the workout log page :)</h1>
+
+    <div id="workoutDiv" class="workout-div">
+
+    </div>
+    <script>
+      let formDisplayed = false;
+    </script>
+
+    <script>
+          let workoutDiv = document.getElementById("workoutDiv");
+          let selectorLabel = document.createElement("label");
+          selectorLabel.innerHTML = "Select a workout template";
+          workoutDiv.appendChild(selectorLabel);
+
+          let templateSelect = document.createElement("select");
+          templateSelect.className = "template-select";
+          templateSelect.id = "templateSelect";
+
+          // now need to query the database for all workout names
+          let workoutNames = [];
+          let templateList = [];
+          async function getTemplateNames() {
+            const response = await fetch("/template-get");
+            const data = await response.json();
+            templateList = data;
+
+            for (let i = 0; i < data.length; i++) {
+              workoutNames.push(data[i].name);
+            }
+          }
+          const setWorkoutOptions = async () => {
+            const done = await getTemplateNames();
+
+            // append the "please select a template" option first
+            let defaultOption = document.createElement("option");
+            defaultOption.innerHTML = "Please select a template";
+            defaultOption.value = -1;
+            templateSelect.appendChild(defaultOption);
+
+            // appends all the template names as options
+            for (let i = 0; i < workoutNames.length; i++) {
+              let option = document.createElement("option");
+              option.innerHTML = workoutNames[i];
+              option.value = i;
+              templateSelect.appendChild(option);
+            }
+
+            workoutDiv.appendChild(templateSelect);
+
+            let loadTemplateBtn = document.createElement("button");
+            loadTemplateBtn.className = "load-template-button";
+            loadTemplateBtn.innerHTML = "Load Template";
+            loadTemplateBtn.addEventListener("click", function () {
+
+              let templateSelect = document.getElementById("templateSelect");
+              let selected = templateSelect.value;
+              if(selected == -1){
+                alert("Please select a template");
+                return false;
+              }
+
+              // create templateForm
+              let templateForm = document.createElement("form");
+              templateForm.className = "template-form";
+              templateForm.id = "templateForm";
+              workoutDiv.appendChild(templateForm);
+              // template name label
+              let templateLabel = document.createElement("label");
+              templateLabel.innerHTML = "Template: " + templateList[selected].name;
+              templateLabel.className = "template-name-label";
+              templateForm.appendChild(templateLabel);
+              // loop:
+              //    exercise div
+              //    exercise name label
+              //    exercise weight/sets list ---- id number
+              //        weights/reps labels
+              //    addset / removeset buttons ---- id number
+              // endloop
+              let selectedWorkout = templateList[selected];
+              let exerciseList = selectedWorkout.exercise_list;
+
+              for (let i = 0 ; i < exerciseList.length; i++){
+
+                // exercise div
+                const tempExDiv = document.createElement("div");
+                tempExDiv.className = "exercise-div";
+                templateForm.appendChild(tempExDiv);
+                
+                // name label
+                const exName = document.createElement("label");
+                exName.className = "exercise-name-label-log";
+                exName.innerHTML = exerciseList[i].name;
+                tempExDiv.appendChild(exName);
+
+                // weight rep list
+                const repList = document.createElement("ul");
+                repList.className = "rep-list-log";
+                repList.id = "repList" + String(i);
+                tempExDiv.appendChild(repList);
+
+                // weights/reps labels, first element of weight rep list
+                const labels = document.createElement("li");
+                labels.className = "labels-li-log";
+                const weightLabel = document.createElement("label");
+                weightLabel.className = "weight-label-log";
+                weightLabel.innerHTML = "Weight (lb)";
+                const repsLabel = document.createElement("label");
+                repsLabel.className = "reps-label-log";
+                repsLabel.innerHTML = "Reps";
+                labels.appendChild(weightLabel);
+                labels.appendChild(repsLabel);
+                repList.appendChild(labels);
+
+                // creates the list of reps/sets, in a loop
+                for(let j = 0; j < exerciseList[i].weight_rep_list.length ; j++){
+
+                  const tempLi = document.createElement("li");
+                  tempLi.className = "rep-set-item-log";
+
+                  const weightInput = document.createElement("input");
+                  weightInput.value = exerciseList[i].weight_rep_list[j].weight;
+                  weightInput.className = "weight-input-log";
+                  tempLi.appendChild(weightInput);
+                  const repInput = document.createElement("input");
+                  repInput.value = exerciseList[i].weight_rep_list[j].reps;
+                  repInput.className = "rep-input-log";
+                  tempLi.appendChild(repInput);
+
+                  repList.appendChild(tempLi);
+
+                }
+
+                // for add set button
+                const addSetButton = document.createElement("button");
+                addSetButton.className = "add-set-button-log";
+                addSetButton.id = "addSetBtn" + String(i);
+                addSetButton.innerHTML = "Add Set";
+                tempExDiv.appendChild(addSetButton);
+                addSetButton.addEventListener("click", function(event){
+                  addSet(addSetButton.id);
+                  event.preventDefault();
+                  return false;
+                });
+                function addSet(id) {
+                  let exercise_num = id.match(/[0-9]+/g);
+
+                  // gets the list that is appended to
+                  const addList = document.getElementById(
+                    "repList" + String(exercise_num)
+                  );
+
+                  // now need to create a list element with an input box inside of it
+                  const repInput = document.createElement("input");
+                  const weightInput = document.createElement("input");
+                  weightInput.className = "weight-input-log";
+                  repInput.className = "set-input-log";
+                  const temp_li = document.createElement("li");
+                  temp_li.appendChild(weightInput);
+                  temp_li.appendChild(repInput);
+                  addList.appendChild(temp_li);
+                }
+
+                //for remove set button
+
+                const removeSetButton = document.createElement("button");
+                removeSetButton.className = "remove-set-button-log";
+                removeSetButton.id = "removeSetButton" + String(i);
+                removeSetButton.innerHTML = "Remove Set";
+                tempExDiv.appendChild(removeSetButton);
+                removeSetButton.addEventListener("click", function (event) {
+                  removeSet(removeSetButton.id);
+                  event.preventDefault();
+                  return false;
+                });
+                function removeSet(id) {
+                  let exercise_num = id.match(/[0-9]+/g);
+                  let rlist = document.getElementById(
+                    "repList" + String(exercise_num)
+                  );
+                  rlist.removeChild(rlist.lastElementChild);
+                }
+
+
+
+              }
+
+
+
+              // Log workout button
+              const logWorkoutBtn = document.createElement("button");
+              logWorkoutBtn.innerHTML = "Log workout";
+
+
+              // Update template button
+
+              
+
+              
+
+
+
+
+
+            });
+            workoutDiv.appendChild(loadTemplateBtn);
+          };
+          setWorkoutOptions();
+    </script>
+
+    <script>
+      const mobileBtn = document.getElementById("mobile-cta");
+      const nav = document.querySelector("nav");
+      const mobileBtnExit = document.getElementById("mobile-exit");
+
+      mobileBtn.addEventListener("click", () => {
+        nav.classList.add("menu-btn");
+      });
+      mobileBtnExit.addEventListener("click", () => {
+        nav.classList.remove("menu-btn");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Georgy's Workout App</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="container">
+        <a class="logo" href="/dashboard">GG<span>workout</span></a>
+
+        <img id="mobile-cta" class="mobile-menu" src="images/menu.svg" />
+
+        <nav>
+          <img
+            id="mobile-exit"
+            class="mobile-menu-exit"
+            src="images/exit.svg"
+          />
+          <ul class="primary-nav">
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/log-a-workout">Log a Workout</a></li>
+            <li><a href="/history">History</a></li>
+            <li><a href="/create-template">Add a Template</a></li>
+          </ul>
+
+          <ul class="secondary-nav">
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div id="formContainer" class="form-container">
+      <form id="templateForm" class="template-form">
+        <script>
+          // global variable to keep track of replists for buttons
+          let exercise_Counter = -1;
+        </script>
+        <label class="template-name-label" for="template-name"
+          >Template Name:
+        </label>
+        <input
+          class="template-name-input"
+          type="text"
+          name="template-name"
+          id="template-name"
+        />
+
+        <ul class="template-button-list">
+          <li class="template-list-element">
+            <button type="button" id="addExerciseBtn" class="add-exercise-btn">
+              Add Exercise
+            </button>
+            <script>
+              // stops default action on form submission
+              document.getElementById("templateForm").onkeypress = function (
+                e
+              ) {
+                let key = e.charCode || e.keyCode || 0;
+                if (key == 13) {
+                  e.preventDefault();
+                }
+              };
+
+              const addExerciseBtn = document.getElementById("addExerciseBtn");
+              addExerciseBtn.onclick = () => {
+                // increments the exercise counter
+                exercise_Counter++;
+
+                // creates an exercise list element
+                const exerciseListItem = document.createElement("li");
+                // creates an exercise div element to place in the list element
+                const exerciseDiv = document.createElement("div");
+                // adds their respective classes to style with css
+                exerciseListItem.className = "exercise-list-item";
+                exerciseListItem.id =
+                  "exericiseListItem" + String(exercise_Counter);
+                exerciseDiv.className = "exercise-div";
+                // append the list item, followed by div inside the list item
+                document
+                  .getElementById("exerciseList")
+                  .appendChild(exerciseListItem);
+                exerciseListItem.appendChild(exerciseDiv);
+
+                // now need to add a label+input into the top of the div
+                const exerciseLabel = document.createElement("label");
+                exerciseLabel.innerHTML = "Exercise name: ";
+                exerciseLabel.className = "exercise-name-label";
+                const exerciseNameInput = document.createElement("input");
+                exerciseNameInput.id =
+                  "exerciseNameInput" + String(exercise_Counter);
+                exerciseNameInput.type = "text";
+                exerciseNameInput.className = "exercise-name-input";
+                exerciseNameInput.placeholder = "Exercise name";
+                // appending them to their exercise div
+                //exerciseDiv.appendChild(exerciseLabel);
+                exerciseDiv.appendChild(exerciseNameInput);
+
+                // now need to create the rep list attached to the specific exercise
+                const repList = document.createElement("ul");
+                repList.className = "rep-list";
+                repList.id = "repList" + String(exercise_Counter);
+                // adds the labels for weight and reps to the rep list, inside a list element
+                const weightLabel = document.createElement("label");
+                weightLabel.className = "weight-label";
+                weightLabel.innerHTML = "Weight (lb)";
+                const repsLabel = document.createElement("label");
+                repsLabel.className = "reps-label";
+                repsLabel.innerHTML = "Reps";
+                const repslabel_li = document.createElement("li");
+                repslabel_li.appendChild(weightLabel);
+                repslabel_li.appendChild(repsLabel);
+                repslabel_li.style = "list-style-type: none";
+                repList.appendChild(repslabel_li);
+                // appends the first input pair of weight and reps
+                const first_weight = document.createElement("input");
+                first_weight.className = "weight-input";
+                const first_reps = document.createElement("input");
+                first_reps.className = "set-input";
+                const first_inputs_li = document.createElement("li");
+                first_inputs_li.appendChild(first_weight);
+                first_inputs_li.appendChild(first_reps);
+                repList.appendChild(first_inputs_li);
+                // append the replist to the exercise div, under the name
+                exerciseDiv.appendChild(repList);
+
+                // now add another list, for the add set, removeset, and remove exercise buttons
+                const repButtonsList = document.createElement("ul");
+                repButtonsList.className = "rep-buttons-list";
+                repButtonsList.id = "repButtonsList" + String(exercise_Counter);
+                // append the replist to the exercise div, under the name
+                exerciseDiv.appendChild(repButtonsList);
+
+                // create a list item, create button, append button to list item, append list item to repButtonsList
+
+                // for add set button
+                const addSetButton = document.createElement("button");
+                addSetButton.className = "add-set-button";
+                addSetButton.id = "addSetButton" + String(exercise_Counter);
+                addSetButton.innerHTML = "Add Set";
+                const addSetButton_li = document.createElement("li");
+                addSetButton_li.className = "rep-button-list-item";
+                addSetButton_li.appendChild(addSetButton);
+                repButtonsList.appendChild(addSetButton_li);
+
+                addSetButton.addEventListener("click", function (event) {
+                  addSet(addSetButton.id);
+                  event.preventDefault();
+                  return false;
+                });
+                function addSet(id) {
+                  let exercise_num = id.match(/[0-9]+/g);
+
+                  // gets the list that is appended to
+                  const addList = document.getElementById(
+                    "repList" + String(exercise_num)
+                  );
+
+                  // now need to create a list element with an input box inside of it
+                  const repInput = document.createElement("input");
+                  const weightInput = document.createElement("input");
+                  weightInput.className = "weight-input";
+                  repInput.className = "set-input";
+                  const temp_li = document.createElement("li");
+                  temp_li.appendChild(weightInput);
+                  temp_li.appendChild(repInput);
+                  addList.appendChild(temp_li);
+                }
+
+                // for remove set button
+                const removeSetButton = document.createElement("button");
+                removeSetButton.className = "remove-set-button";
+                removeSetButton.id =
+                  "removeSetButton" + String(exercise_Counter);
+                removeSetButton.innerHTML = "Remove Set";
+                const removeSetButton_li = document.createElement("li");
+                removeSetButton_li.className = "rep-button-list-item";
+                removeSetButton_li.appendChild(removeSetButton);
+                repButtonsList.appendChild(removeSetButton_li);
+                removeSetButton.addEventListener("click", function (event) {
+                  removeSet(removeSetButton.id);
+                  event.preventDefault();
+                  return false;
+                });
+                function removeSet(id) {
+                  let exercise_num = id.match(/[0-9]+/g);
+                  let rlist = document.getElementById(
+                    "repList" + String(exercise_num)
+                  );
+                  rlist.removeChild(rlist.lastElementChild);
+                }
+
+                // for delete exercise button
+                const deleteExerciseButton = document.createElement("button");
+                deleteExerciseButton.className = "delete-exercise-button";
+                deleteExerciseButton.id =
+                  "deleteExerciseButton" + String(exercise_Counter);
+                deleteExerciseButton.innerHTML = "Delete Exercise";
+                const deleteExerciseButton_li = document.createElement("li");
+                deleteExerciseButton_li.className = "rep-button-list-item";
+                deleteExerciseButton_li.appendChild(deleteExerciseButton);
+                repButtonsList.appendChild(deleteExerciseButton_li);
+                deleteExerciseButton.addEventListener(
+                  "click",
+                  function (event) {
+                    deleteExercise(deleteExerciseButton.id);
+                    event.preventDefault();
+                    return false;
+                  }
+                );
+                function deleteExercise(id) {
+                  let exercise_num = id.match(/[0-9]+/g);
+                  document
+                    .getElementById("exericiseListItem" + String(exercise_num))
+                    .remove();
+                }
+
+                return false;
+              };
+            </script>
+          </li>
+
+          <li class="template-list-element">
+            <button id="saveTemplateBtn" class="save-template-btn">
+              Save Template
+            </button>
+            <script>
+              let badInput = false;
+              let data;
+
+              document
+                .getElementById("saveTemplateBtn")
+                .addEventListener("click", function (event) {
+                  sendForm();
+                });
+              function sendForm() {
+                data = document.getElementsByClassName("template-form");
+                //let form_HTML = document.getElementById("templateForm").innerHTML;
+
+                // console.log(formHTML, typeof(formHTML));
+
+                let templateName = data[0][0].value;
+                if (templateName == "") {
+                  alert("ERROR: Template name cannot be empty");
+                  return false;
+                }
+
+                class weight_rep_pair {
+                  constructor(weight, reps) {
+                    this.weight = weight;
+                    this.reps = reps;
+                  }
+                }
+                class exercise {
+                  constructor(name) {
+                    this.name = name;
+                    this.weight_rep_list = [];
+                  }
+                }
+                class workout {
+                  constructor(name) {
+                    this.name = name;
+                    this.exercise_list = [];
+                    //this.formHtml = formHTML;
+                  }
+                }
+
+                let workoutTemplate = new workout(templateName);
+
+                for (let i = 0; i < data[0].length; i++) {
+                  if (data[0][i].className == "exercise-name-input") {
+                    let tempExercise = new exercise(data[0][i].value);
+                    if (data[0][i].value == "") {
+                      alert("ERROR: Exercise name cannot be empty");
+                      return false;
+                    }
+
+                    for (
+                      let j = i + 1;
+                      data[0][j].className != "add-set-button";
+                      j += 2
+                    ) {
+                      if (
+                        /^\d+$/.test(data[0][j].value) &&
+                        /^\d+$/.test(data[0][j + 1].value)
+                      ) {
+                        let tempPair = new weight_rep_pair(
+                          data[0][j].value,
+                          data[0][j + 1].value
+                        );
+                        tempExercise.weight_rep_list.push(tempPair);
+                      } else {
+                        badInput = true;
+                        alert("Invalid value(s)");
+                        sleep(100);
+                        return false;
+                      }
+                    }
+
+                    workoutTemplate.exercise_list.push(tempExercise);
+                  }
+                }
+
+                const options = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(workoutTemplate),
+                };
+                fetch("/template-post", options).then((response) =>
+                  console.log("sent template data")
+                );
+                alert("Exercise template" + templateName + " has been saved");
+                sleep(100);
+              }
+              function sleep(miliseconds) {
+                let currentTime = new Date().getTime();
+
+                while (currentTime + miliseconds >= new Date().getTime()) {}
+              }
+            </script>
+          </li>
+        </ul>
+
+        <ul id="exerciseList" class="exercise-list"></ul>
+      </form>
+    </div>
+
+    <script>
+      const mobileBtn = document.getElementById("mobile-cta");
+      const nav = document.querySelector("nav");
+      const mobileBtnExit = document.getElementById("mobile-exit");
+
+      mobileBtn.addEventListener("click", () => {
+        nav.classList.add("menu-btn");
+      });
+      mobileBtnExit.addEventListener("click", () => {
+        nav.classList.remove("menu-btn");
+      });
+    </script>
+  </body>
+</html>

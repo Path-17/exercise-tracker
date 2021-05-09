@@ -1,0 +1,241 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+:root {
+  --primary-color: #007AF3;
+}
+
+body {
+  background: #f2f2f2;
+  margin: 0;
+  font-family: 'Poppins';
+}
+
+.navbar {
+  background: white;
+  padding: 1em;
+}
+
+.navbar .logo {
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+  font-size: 1.2em;
+}
+
+.navbar .logo span {
+  color: var(--primary-color);
+}
+
+.navbar nav {
+  display: none;
+}
+
+.navbar .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  place-content: space-between;
+}
+
+.navbar .mobile-menu {
+  cursor: pointer;
+}
+
+a {
+  color: #444444;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.template-form .template-name-label {
+  margin-top: 1em;
+}
+
+.template-form .template-name-input {
+  margin-top: 1em;
+  width: 120px;
+}
+
+nav.menu-btn {
+  display: block;
+}
+
+.form-container {
+  display: block;
+  text-align: center;
+}
+
+.template-button-list {
+  margin-top: 0.7em;
+}
+
+.template-list-element {
+  display: inline;
+}
+
+.exercise-div {
+  margin-top: 1em;
+}
+
+.exercise-name-input {
+  width: 120px;
+  font-size: 13px;
+  margin-top: 2.5em;
+}
+
+.reps-label {
+  font-size: 12px;
+  position: relative;
+  right: -2.3em;
+}
+
+.weight-label {
+  font-size: 12px;
+  position: relative;
+  left: -3.75em;
+}
+
+.rep-buttons-list {
+  margin-top: 1em;
+}
+
+.rep-list {
+  margin-top: .5em;
+}
+
+.rep-button-list-item {
+  display: inline;
+}
+
+.weight-input {
+  position: relative;
+  left: -2.7em;
+  width: 40px;
+}
+
+.set-input {
+  position: relative;
+  right: -2.9em;
+  width: 40px;
+}
+
+.add-set-button, .remove-set-button {
+  position: relative;
+  left: 4.45em;
+}
+
+.add-set-button {
+  width: 100.9px;
+  background: #1b971b;
+}
+
+.remove-set-button {
+  background: #e46262;
+}
+
+.delete-exercise-button {
+  position: relative;
+  bottom: -2.2em;
+  left: -7.4em;
+  background: #bb2e15;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s;
+          transition-duration: 0.4s;
+}
+
+input {
+  font-family: inherit;
+}
+
+.add-exercise-btn {
+  width: 119.8px;
+  background: #1b971b;
+  padding-right: 1;
+}
+
+.save-template-btn {
+  background: var(--primary-color);
+}
+
+nav {
+  position: fixed;
+  z-index: 999;
+  width: 66%;
+  right: 0;
+  top: 0;
+  background: #20272E;
+  height: 100vh;
+  padding: 1em;
+}
+
+nav ul.primary-nav {
+  margin-top: 5em;
+}
+
+nav li a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: .5em;
+  font-size: 1.3em;
+  text-align: right;
+}
+
+nav li a:hover {
+  font-weight: bold;
+}
+
+.mobile-menu-exit {
+  float: right;
+  margin: .5em;
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 768px) {
+  .mobile-menu, .mobile-menu-exit {
+    display: none;
+  }
+  .navbar .container {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 180px auto;
+        grid-template-columns: 180px auto;
+  }
+  .navbar nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    background: none;
+    position: unset;
+    height: auto;
+    width: 100%;
+    padding: 0;
+  }
+  .navbar nav ul {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  .navbar nav a {
+    color: black;
+    font-size: 1em;
+    padding: .1em 1em;
+  }
+  .navbar nav ul.primary-nav {
+    margin: 0;
+  }
+  .navbar nav li.current a {
+    font-weight: bold;
+  }
+}
+/*# sourceMappingURL=main.css.map */
