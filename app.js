@@ -55,7 +55,8 @@ app.get('/template-get', (req, res) => {
 // save workout end point
 app.post('/workout-post', (req, res) =>{
 
-  
+  let workout = req.body;
+  workoutDatabase.insert(workout);
 
 });
 

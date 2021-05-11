@@ -45,6 +45,7 @@
     </script>
 
     <script>
+          
           let workoutDiv = document.getElementById("workoutDiv");
           let selectorLabel = document.createElement("label");
           selectorLabel.innerHTML = "Select a workout template";
@@ -89,6 +90,7 @@
             loadTemplateBtn.className = "load-template-button";
             loadTemplateBtn.innerHTML = "Load Template";
             loadTemplateBtn.addEventListener("click", function () {
+              
 
               let templateSelect = document.getElementById("templateSelect");
               let selected = templateSelect.value;
@@ -96,6 +98,10 @@
                 alert("Please select a template");
                 return false;
               }
+              if(formDisplayed == true){
+                document.getElementById("templateForm").remove();
+              }
+              formDisplayed = true;
 
               // create templateForm
               let templateForm = document.createElement("form");
@@ -225,8 +231,66 @@
 
 
               // Log workout button
-              const logWorkoutBtn = document.createElement("button");
-              logWorkoutBtn.innerHTML = "Log workout";
+              const saveWorkoutBtn = document.createElement("button");
+              saveWorkoutBtn.innerHTML = "Save workout";
+              saveWorkoutBtn.className = "save-workout-button";
+              workoutDiv.appendChild(saveWorkoutBtn);
+
+              
+
+              saveWorkoutBtn.addEventListener("click", function() {
+
+
+
+                for (let i = 0 ; i < exerciseList.length; i++){
+                  
+                  let tempRepList = document.getElementById("repList"+String(i));
+                  selectedWorkout.exercise_list[i].weight_rep_list = [];
+                  // console.log(tempRepList.getElementsByClassName("weight-input-log"));
+
+                  for (let j = 0; j < tempRepList.getElementsByClassName("weight-input-log").length ; j++){
+                    
+                    //console.log(tempRepList.getElementsByClassName("weight-input-log")[j].value)
+                    let temp_weight_reps = {
+                      weight: 0,
+                      reps: 0,
+                    };
+                    temp_weight_reps.weight = tempRepList.getElementsByClassName("weight-input-log")[j].value;
+                    temp_weight_reps.reps = tempRepList.getElementsByClassName("rep-input-log")[j].value;
+                    selectedWorkout.exercise_list[i].weight_rep_list.push(temp_weight_reps);
+
+                  }
+
+                }
+
+                // need to delete the id to be able to store more than one of a particular object in db
+                delete selectedWorkout._id;
+
+                console.log(selectedWorkout);
+                selectedWorkout.time = Date.now();
+
+                const options = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(selectedWorkout),
+                }
+                
+                fetch("/workout-post", options);
+                sleep(100);
+                alert("Workout logged :)");
+                window.location.reload();
+
+
+                function sleep(miliseconds) {
+                let currentTime = new Date().getTime();
+
+                while (currentTime + miliseconds >= new Date().getTime()) {}
+              }
+
+              });
+
 
 
               // Update template button
