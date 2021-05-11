@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+.workout-div{
+    text-align: center;
+    margin-top: 2em;
+}
+.load-template-button{
+    background: #1b971b;
+    margin-top: 1em;
+}
+.template-select{
+    margin-left: 1em;
+}
+.weight-input-log, .rep-input-log{
+    width: 40px;
+}
+.add-set-button-log, .remove-set-button-log {
+    position: relative;
+    margin-top: 0.5em;
+}
+.add-set-button-log{
+    width: 106.8px;
+    background: #1b971b;
+}
+.remove-set-button-log {
+    background: #e46262;
+}
+.save-workout-button{
+    margin-top: 1em;
+    background-color: rgb(16, 238, 182);
+}
+.template-name-label{
+    margin-top: 80px;
+}

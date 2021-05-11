@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Georgy's Workout App</title>
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/logworkout.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
@@ -35,8 +36,6 @@
       </div>
     </div>
 
-    <h1>Hello this is the workout log page :)</h1>
-
     <div id="workoutDiv" class="workout-div">
 
     </div>
@@ -48,7 +47,7 @@
           
           let workoutDiv = document.getElementById("workoutDiv");
           let selectorLabel = document.createElement("label");
-          selectorLabel.innerHTML = "Select a workout template";
+          selectorLabel.innerHTML = "Select a workout template:";
           workoutDiv.appendChild(selectorLabel);
 
           let templateSelect = document.createElement("select");
@@ -232,7 +231,7 @@
 
               // Log workout button
               const saveWorkoutBtn = document.createElement("button");
-              saveWorkoutBtn.innerHTML = "Save workout";
+              saveWorkoutBtn.innerHTML = "Save Workout";
               saveWorkoutBtn.className = "save-workout-button";
               workoutDiv.appendChild(saveWorkoutBtn);
 

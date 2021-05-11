@@ -124,7 +124,7 @@ nav.menu-btn {
 
 .add-set-button, .remove-set-button {
   position: relative;
-  left: 4.45em;
+  left: 4.7em;
 }
 
 .add-set-button {
@@ -146,8 +146,6 @@ nav.menu-btn {
 button {
   font-family: inherit;
   cursor: pointer;
-  -webkit-transition-duration: 0.4s;
-          transition-duration: 0.4s;
 }
 
 input {
