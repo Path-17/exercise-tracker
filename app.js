@@ -36,6 +36,10 @@ templateDatabase.loadDatabase();
 const workoutDatabase = new dataStore('workoutDatabase.db');
 workoutDatabase.loadDatabase();
 
+// exercise database init
+const exerciseDatabase = new dataStore('exerciseDatabase.db');
+exerciseDatabase.loadDatabase();
+
 // save template end point
 app.post('/template-post', (req, res) => {
   let template = req.body;
@@ -46,7 +50,7 @@ app.post('/template-post', (req, res) => {
 app.get('/template-get', (req, res) => {
 
   templateDatabase.find({}, function(err, docs){
-    // send back the list of names
+    // send back the list of templates
     res.json(docs);
   });
 
@@ -57,6 +61,51 @@ app.post('/workout-post', (req, res) =>{
 
   let workout = req.body;
   workoutDatabase.insert(workout);
+
+  // exercise db
+  // name , lowercase, no spaces
+  // max history [], get max per workout, then append it with time stamp
+
+  for(let i = 0 ; i < workout.exercise_list.length ; i++){
+    let tempRepList = workout.exercise_list[i].weight_rep_list;
+    let oneRepMax = 0;
+    for (let j = 0 ; j < tempRepList.length; j++){
+      if(estimateOneRepMax(tempRepList[j].weight, tempRepList[j].reps) > oneRepMax){
+        oneRepMax = estimateOneRepMax(tempRepList[j].weight, tempRepList[j].reps);
+        
+      }
+    }
+
+    let name = workout.exercise_list[i].name.toLowerCase().replace(/\s/g, '');
+    let searchTerm = {name};
+
+    exerciseDatabase.count(searchTerm, function(err, count){
+
+      let time = workout.time;
+      let max_time_pair = {oneRepMax, time};
+      let PR_Times = [max_time_pair];
+
+      // if not in db, insert it
+      if(count == 0){
+        
+        let exerciseData = {
+          name,
+          PR_Times
+        }
+        exerciseDatabase.insert(exerciseData);
+      }
+      // if in db, update the array with the new Pr-Time pair
+      else{
+        let temp = max_time_pair;
+        exerciseDatabase.update({name}, {$push: {PR_Times: {oneRepMax, time}}},{},function(){
+          console.log("exercise database updated")    
+        });
+        exerciseDatabase.persistence.compactDatafile();
+      }
+
+    });
+  }
+  
 
 });
 
@@ -77,5 +126,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+function estimateOneRepMax(weight, reps){
+  return (weight / (1.0278-(0.0278*reps)));
+}
 
 module.exports = app;
