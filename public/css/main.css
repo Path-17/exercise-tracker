@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
 :root {
-  --primary-color: #007AF3;
+  --primary-color: rgb(0, 122, 243);
 }
 
 body {
@@ -90,6 +90,16 @@ nav.menu-btn {
   font-size: 12px;
   position: relative;
   right: -2.3em;
+}
+
+.chart-div{
+  text-align: center;
+}
+
+.canvas{
+  margin: 0 auto;
+  width: 437px;
+  height: 437px;
 }
 
 .weight-label {

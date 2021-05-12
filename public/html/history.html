@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Georgy's Workout App</title>
         <link rel="stylesheet" href="css/main.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
@@ -32,6 +33,85 @@
         </div>
 
         <h1>Hello this is the history page :)</h1>
+        
+        <div class="chart-container">
+            <div class="chart-div">
+                <canvas class="canvas" id="chart" width="200" height="200"></canvas>
+                <script>
+                drawWorkoutHistory();
+                // request for a list of the last 8 weeks of exercises
+                async function drawWorkoutHistory(){
+                    const response = await fetch('/workout-get');
+                    const workoutWeekList = await response.json();
+                    //console.log(response);
+                    console.log(workoutWeekList);
+
+                    let labelNums = 8;
+                    let workoutCount = [];
+                    for(let i = 0 ; i < labelNums ; i++){
+                        if(workoutWeekList[i] === 0){
+                            workoutCount.push(0);
+                        }
+                        else{
+                            workoutCount.push(workoutWeekList[i].count);
+                        }
+                    }
+
+                    workoutCount.reverse();
+
+
+                    var ctx = document.getElementById('chart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['7', '6', '5', '4', '3', '2', '1', 'Current'],
+                            datasets: [{
+                                data: workoutCount,
+                                backgroundColor: [
+                                    'rgba(0, 122, 243, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgba(0, 122, 243, 1)',
+                                ],
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    title : {
+                                        display: true,
+                                        text: "Weeks Back"
+                                    }
+                                },
+                                y: {
+                                    max: 7,
+                                    min: 0
+                                }
+                            },
+                            
+                            responsive: true,
+                            plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            title: {
+                                display: true,
+                                text: 'Workout Frequency by Week'
+                            }
+                            }
+                        },
+                    });
+                    //console.log(myChart.options.scales)
+                    //myChart.options.scales[x].title.display = true;
+                    //myChart.options.scales[x].title.text = "Weeks back";
+                }
+                
+
+                </script>
+            </div>
+        </div>
+        
         
         
         <script>

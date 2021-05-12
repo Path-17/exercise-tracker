@@ -60,6 +60,8 @@ app.get('/template-get', (req, res) => {
 app.post('/workout-post', (req, res) =>{
 
   let workout = req.body;
+  workout.weekNumber = new Date(workout.time).getWeek();
+  workout.year = new Date(workout.time).getFullYear();
   workoutDatabase.insert(workout);
 
   // exercise db
@@ -109,6 +111,103 @@ app.post('/workout-post', (req, res) =>{
 
 });
 
+app.get('/workout-get', (req, res) => {
+
+  class workoutWeek{
+    constructor(count, week, workoutList){
+      this.workoutList = workoutList;
+      this.count = count;
+      this.week = week;
+    }
+  }
+
+  let workoutWeekList = [];
+
+  
+  let weekNum = new Date(Date.now()).getWeek();
+  //weekNumber--;
+
+  console.log("current week is:" + String(weekNum));
+
+  let currentYear = new Date(Date.now()).getFullYear();
+
+  workoutDatabase.find({weekNumber: weekNum, year: currentYear}, function(err, docs0){
+    if(docs0.length > 0){
+      let temp0 = new workoutWeek(docs0.length, 0, docs0);
+      workoutWeekList.push(temp0);
+    }
+    else{
+      workoutWeekList.push(0);
+    }
+    workoutDatabase.find({weekNumber: weekNum-1, year: currentYear}, function(err, docs1){
+      if(docs1.length > 0){
+        let temp1 = new workoutWeek(docs1.length, 1, docs1);
+        workoutWeekList.push(temp1);
+      }
+      else{
+        workoutWeekList.push(0);
+      }
+      workoutDatabase.find({weekNumber: weekNum-2, year: currentYear}, function(err, docs2){
+        if(docs2.length > 0){
+          let temp2 = new workoutWeek(docs2.length, 2, docs2);
+          workoutWeekList.push(temp2);
+        }
+        else{
+          workoutWeekList.push(0);
+        }
+        workoutDatabase.find({weekNumber: weekNum-3, year: currentYear}, function(err, docs3){
+          if(docs3.length > 0){
+            let temp3 = new workoutWeek(docs3.length, 3, docs3);
+            workoutWeekList.push(temp3);
+          }
+          else{
+            workoutWeekList.push(0);
+          }
+          workoutDatabase.find({weekNumber: weekNum-4, year: currentYear}, function(err, docs4){
+
+            if(docs4.length > 0){
+              let temp4 = new workoutWeek(docs4.length, 4, docs4);
+              workoutWeekList.push(temp4);
+            }
+            else{
+              workoutWeekList.push(0);
+            }
+            workoutDatabase.find({weekNumber: weekNum-5, year: currentYear}, function(err, docs5){
+              if(docs5.length > 0){
+                let temp5 = new workoutWeek(docs5.length, 5, docs5);
+                workoutWeekList.push(temp5);
+              }
+              else{
+                workoutWeekList.push(0);
+              }
+              workoutDatabase.find({weekNumber: weekNum-6, year: currentYear}, function(err, docs6){
+
+                if(docs6.length > 0){
+                  let temp6 = new workoutWeek(docs6.length, 6, docs6);
+                  workoutWeekList.push(temp6);
+                }
+                else{
+                  workoutWeekList.push(0);
+                }
+                workoutDatabase.find({weekNumber: weekNum-7, year: currentYear}, function(err, docs7){
+                  if(docs7.length > 0){
+                    let temp7 = new workoutWeek(docs7.length, 7, docs7);
+                    workoutWeekList.push(temp7);
+                  }
+                  else{
+                    workoutWeekList.push(0);
+                  }
+                  res.json(workoutWeekList);
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
 
 
 // catch 404 and forward to error handler
@@ -129,6 +228,19 @@ app.use(function(err, req, res, next) {
 
 function estimateOneRepMax(weight, reps){
   return (weight / (1.0278-(0.0278*reps)));
+}
+
+// Returns the ISO week of the date.
+Date.prototype.getWeek = function() {
+  var date = new Date(this.getTime());
+  date.setHours(0, 0, 0, 0);
+  // Thursday in current week decides the year.
+  date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+  // January 4 is always in week 1.
+  var week1 = new Date(date.getFullYear(), 0, 4);
+  // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+  return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
+                          - 3 + (week1.getDay() + 6) % 7) / 7);
 }
 
 module.exports = app;
