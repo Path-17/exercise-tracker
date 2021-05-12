@@ -8,6 +8,9 @@ body {
   margin: 0;
   font-family: 'Poppins';
 }
+.history-title{
+  text-align: center;
+}
 
 .navbar {
   background: white;
