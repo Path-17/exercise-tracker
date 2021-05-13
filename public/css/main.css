@@ -92,7 +92,7 @@ nav.menu-btn {
 .reps-label {
   font-size: 12px;
   position: relative;
-  right: -2.3em;
+  right: -3.1em;
 }
 
 .chart-div{
@@ -105,10 +105,21 @@ nav.menu-btn {
   height: 437px;
 }
 
+.weight-label-log {
+  font-size: 12px;
+  position: relative;
+  left: -4.4em;
+}
+.reps-label-log {
+  font-size: 12px;
+  position: relative;
+  right: -3.1em;
+}
+
 .weight-label {
   font-size: 12px;
   position: relative;
-  left: -3.75em;
+  left: -4.4em;
 }
 
 .rep-buttons-list {
@@ -135,9 +146,21 @@ nav.menu-btn {
   width: 40px;
 }
 
+.weight-input-log {
+  position: relative;
+  left: -2.7em;
+  width: 40px;
+}
+
+.rep-input-log {
+  position: relative;
+  right: -2.9em;
+  width: 40px;
+}
+
 .add-set-button, .remove-set-button {
   position: relative;
-  left: 4.7em;
+  left: 4.2em;
 }
 
 .add-set-button {

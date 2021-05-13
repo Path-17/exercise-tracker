@@ -111,6 +111,14 @@ app.post('/workout-post', (req, res) =>{
 
 });
 
+app.get('/exercise-get', (req,res)=>{
+
+  exerciseDatabase.find({}, function(err, docs){
+    res.json(docs);
+  });
+
+});
+
 app.get('/workout-get', (req, res) => {
 
   class workoutWeek{

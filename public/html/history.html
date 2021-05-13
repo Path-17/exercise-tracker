@@ -32,11 +32,11 @@
             </div>
         </div>
 
-        <h3 class="history-title">Hello this is the history page :)</h3>
+        <h3 class="history-title">WORKOUT HISTORY</h3>
         
         <div class="chart-container">
             <div class="chart-div">
-                <canvas class="canvas" id="chart" width="200" height="200"></canvas>
+                <canvas class="canvas" id="weekHistory" width="200" height="200"></canvas>
                 <script>
                 drawWorkoutHistory();
                 // request for a list of the last 8 weeks of exercises
@@ -44,7 +44,6 @@
                     const response = await fetch('/workout-get');
                     const workoutWeekList = await response.json();
                     //console.log(response);
-                    console.log(workoutWeekList);
 
                     let labelNums = 8;
                     let workoutCount = [];
@@ -60,7 +59,7 @@
                     workoutCount.reverse();
 
 
-                    var ctx = document.getElementById('chart').getContext('2d');
+                    var ctx = document.getElementById('weekHistory').getContext('2d');
                     var myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
@@ -110,7 +109,25 @@
 
                 </script>
             </div>
+            <div class="chart-div">
+                <canvas class="canvas" id="exerciseHistory" width="200" height="200"></canvas>
+                <script>
+                    drawExerciseHistory();
+                    async function drawExerciseHistory() {
+
+                        let response = await fetch('/exercise-get');
+                        let exercises = await response.json();
+                        console.log(exercises);
+
+                        
+
+                    }
+
+                </script>
+            </div>
         </div>
+
+       
         
         
         
