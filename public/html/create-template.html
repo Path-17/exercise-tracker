@@ -9,6 +9,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
+    <script>
+      let manual_exercise_List = [
+                  "Bench Press",
+                  "Incline Bench Press",
+                  "Seated Overhead Press",
+                  "Standing Overhead Press",
+                  "Tricep Pushdown",
+                  "Skullcrushers",
+                  "Alternating Dumbell Curls",
+                  "Dumbell Hammer Curls",
+                  "Pendlay Row",
+                  "Bent Over Row",
+                  "Pull-Up",
+                  "Back Squat",
+                  "Front Squat",
+                  "Push-Up",
+                  "Overhead Tricep Extension",
+                  "Deadlift",
+                  "Lateral Raises"
+                ]
+                manual_exercise_List.sort();
+    </script>
     <div class="navbar">
       <div class="container">
         <a class="logo" href="/dashboard">GG<span>workout</span></a>
@@ -90,15 +112,41 @@
                 const exerciseLabel = document.createElement("label");
                 exerciseLabel.innerHTML = "Exercise name: ";
                 exerciseLabel.className = "exercise-name-label";
-                const exerciseNameInput = document.createElement("input");
-                exerciseNameInput.id =
-                  "exerciseNameInput" + String(exercise_Counter);
-                exerciseNameInput.type = "text";
-                exerciseNameInput.className = "exercise-name-input";
-                exerciseNameInput.placeholder = "Exercise name";
+
+                // NEED TO ADD A SELECTOR HERE FOR EXERCISES INSTEAD OF A TEXT BOX //
+
+                // const exerciseNameInput = document.createElement("input");
+                // exerciseNameInput.id =
+                //   "exerciseNameInput" + String(exercise_Counter);
+                // exerciseNameInput.type = "text";
+                // exerciseNameInput.className = "exercise-name-input";
+                // exerciseNameInput.placeholder = "Exercise name";
                 // appending them to their exercise div
                 //exerciseDiv.appendChild(exerciseLabel);
-                exerciseDiv.appendChild(exerciseNameInput);
+                //exerciseDiv.appendChild(exerciseNameInput);
+
+                
+
+                // new selector code
+                const exerciseSelector = document.createElement("select");
+                exerciseSelector.id = "exerciseSelector";
+                exerciseSelector.className = "exercise-name-input";
+                const defaultExercise = document.createElement("option");
+                defaultExercise.innerHTML = "Please select an exercise";
+                defaultExercise.value = -1;
+                exerciseSelector.appendChild(defaultExercise);
+                exerciseDiv.appendChild(exerciseSelector);
+
+                // adds all the options to the selector
+                for(let i = 0 ; i < manual_exercise_List.length ; i++){
+                  const temp = document.createElement("option");
+                  temp.innerHTML = manual_exercise_List[i];
+                  temp.value = i;
+                  exerciseSelector.appendChild(temp);
+                }
+
+
+
 
                 // now need to create the rep list attached to the specific exercise
                 const repList = document.createElement("ul");
@@ -273,11 +321,12 @@
 
                 for (let i = 0; i < data[0].length; i++) {
                   if (data[0][i].className == "exercise-name-input") {
-                    let tempExercise = new exercise(data[0][i].value);
-                    if (data[0][i].value == "") {
-                      alert("ERROR: Exercise name cannot be empty");
+                    if (data[0][i].value == -1) {
+                      alert("ERROR: Please pick an exercise");
                       return false;
                     }
+                    let tempExercise = new exercise(manual_exercise_List[data[0][i].value]);
+                    
 
                     for (
                       let j = i + 1;

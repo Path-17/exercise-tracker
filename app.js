@@ -78,7 +78,7 @@ app.post('/workout-post', (req, res) =>{
       }
     }
 
-    let name = workout.exercise_list[i].name.toLowerCase().replace(/\s/g, '');
+    let name = workout.exercise_list[i].name;
     let searchTerm = {name};
 
     exerciseDatabase.count(searchTerm, function(err, count){

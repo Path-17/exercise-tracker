@@ -10,6 +10,28 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
+        <script>
+            let manual_exercise_List = [
+                        "Bench Press",
+                        "Incline Bench Press",
+                        "Seated Overhead Press",
+                        "Standing Overhead Press",
+                        "Tricep Pushdown",
+                        "Skullcrushers",
+                        "Alternating Dumbell Curls",
+                        "Dumbell Hammer Curls",
+                        "Pendlay Row",
+                        "Bent Over Row",
+                        "Pull-Up",
+                        "Back Squat",
+                        "Front Squat",
+                        "Push-Up",
+                        "Overhead Tricep Extension",
+                        "Deadlift",
+                        "Lateral Raises"
+                      ]
+                      manual_exercise_List.sort();
+          </script>
         <div class="navbar">
             <div class="container">
                 <a class="logo" href="/dashboard">GG<span>workout</span></a>
@@ -59,8 +81,8 @@
                     workoutCount.reverse();
 
 
-                    var ctx = document.getElementById('weekHistory').getContext('2d');
-                    var myChart = new Chart(ctx, {
+                    let ctx = document.getElementById('weekHistory').getContext('2d');
+                    let myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             labels: ['7', '6', '5', '4', '3', '2', '1', '0'],
@@ -109,15 +131,44 @@
 
                 </script>
             </div>
+
+            <h3 class="history-title">Exercise History</h3>
+
             <div class="chart-div">
                 <canvas class="canvas" id="exerciseHistory" width="200" height="200"></canvas>
+                <div class="select-div" id="selectDiv">
+                    <select id="selectedExercise" class="exercise-history-selector"></select>
+                </div>
                 <script>
+                    const selectDiv = document.getElementById("selectDiv");
+                    selectDiv.style = "text-align: center";
+                    const exSelect = document.getElementById("selectedExercise");
+                    for(let i = 0 ; i < manual_exercise_List.length ; i++){
+                        let temp = document.createElement("option");
+                        temp.innerHTML = manual_exercise_List[i];
+                        temp.value = i;
+                        exSelect.appendChild(temp);
+                    }
+
                     drawExerciseHistory();
                     async function drawExerciseHistory() {
 
                         let response = await fetch('/exercise-get');
                         let exercises = await response.json();
-                        console.log(exercises);
+                        
+                        let data = [];
+                        let times = [];
+                        let exerciseName = manual_exercise_List[exSelect.value];
+                        let selectedExercise;
+
+                        for(let i = 0 ; i < exercises.length ; i++){
+                            if(exercises[i].name == exerciseName){
+                                selectedExercise = exercises[i];
+                            }
+                        }
+
+                        //for(let i = 0; i < )
+                        
 
                         
 
