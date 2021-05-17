@@ -31,6 +31,7 @@
                         "Lateral Raises"
                       ]
                       manual_exercise_List.sort();
+                      let myChart;
           </script>
         <div class="navbar">
             <div class="container">
@@ -54,7 +55,7 @@
             </div>
         </div>
 
-        <h3 class="history-title">WORKOUT HISTORY</h3>
+        <h3 class="history-title">Workout History</h3>
         
         <div class="chart-container">
             <div class="chart-div">
@@ -143,11 +144,10 @@
                     const selectDiv = document.getElementById("selectDiv");
                     selectDiv.style = "text-align: center";
                     const exSelect = document.getElementById("selectedExercise");
-                    for(let i = 0 ; i < manual_exercise_List.length ; i++){
-                        let temp = document.createElement("option");
-                        temp.innerHTML = manual_exercise_List[i];
-                        temp.value = i;
-                        exSelect.appendChild(temp);
+                    
+                    exSelect.onchange = function(){
+                        myChart.destroy();
+                        drawExerciseHistory();
                     }
 
                     drawExerciseHistory();
@@ -156,21 +156,82 @@
                         let response = await fetch('/exercise-get');
                         let exercises = await response.json();
                         
-                        let data = [];
+                        let maxList = [];
                         let times = [];
-                        let exerciseName = manual_exercise_List[exSelect.value];
-                        let selectedExercise;
+                        let namesList = [];
+                        
+                        let selectedExercise = "none";
 
                         for(let i = 0 ; i < exercises.length ; i++){
+                            let temp = document.createElement("option");
+                            temp.label = exercises[i].name;
+                            namesList.push(exercises[i].name);
+                            temp.value = i;
+                            exSelect.appendChild(temp);
+                        }
+                        let exerciseName = namesList[exSelect.value];
+
+                        for(i = 0 ; i < exercises.length ; i++){
                             if(exercises[i].name == exerciseName){
                                 selectedExercise = exercises[i];
                             }
                         }
 
-                        //for(let i = 0; i < )
-                        
+                        let maxScale = 0;
 
                         
+                        for(let i = 0 ; i < selectedExercise.PR_Times.length ; i++){
+                            let time = new Date(selectedExercise.PR_Times[i].time);
+                           
+                            let month = time.getMonth() + 1;
+                         
+                            let date = time.getDate();
+                         
+                            let monthDate = String(month) + "-" + String(date);
+                            times.push(monthDate);
+                            maxList.push(selectedExercise.PR_Times[i].oneRepMax);
+                            if (maxScale < selectedExercise.PR_Times[i].oneRepMax){
+                                maxScale = Math.ceil(selectedExercise.PR_Times[i].oneRepMax);
+                            }
+                        }
+                        maxScale+=10;
+                        
+                        
+                        let exGraph = document.getElementById('exerciseHistory').getContext('2d');
+                        myChart = new Chart(exGraph, {
+                        type: 'line',
+                        data: {
+                            labels: times,
+                            datasets: [{
+                                data: maxList,
+                                backgroundColor: [
+                                    'rgba(0, 122, 243, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgba(0, 122, 243, 1)',
+                                ],
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    //max: maxScale,
+                                }
+                            },
+                            
+                            responsive: true,
+                            plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            title: {
+                                display: true,
+                                text: exerciseName+' History',
+                            }
+                            }
+                        },
+                    });
 
                     }
 
